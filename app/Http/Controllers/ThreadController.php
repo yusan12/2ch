@@ -35,7 +35,8 @@ class ThreadController extends Controller
      */
     public function index()
     {
-        return view('threads.index');
+        $threads = $this->thread_service->getThreads(3);
+        return view('threads.index', compact('threads'));
     }
 
     /**
