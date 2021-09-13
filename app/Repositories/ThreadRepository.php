@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 use App\Thread;
+use Carbon\Carbon;
 class ThreadRepository
 {
     /**
@@ -25,5 +26,22 @@ class ThreadRepository
     public function create(array $data)
     {
         return $this->thread->create($data);
+    }
+
+    public function getPaginatedThreads(int $per_page)
+    {
+        return $this->thread->orderBy('latest_comment_time', 'desc')->paginate($per_page);
+    }
+
+    public function findById(int $id)
+    {
+        return $this->thread->find($id);
+    }
+
+    public function updateTime(int $id)
+    {
+        $thread = $this->findById($id);
+        $thread->latest_comment_time = Carbon::now();
+        return $thread->save();
     }
 }
