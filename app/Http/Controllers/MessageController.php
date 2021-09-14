@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class MessageController extends Controller
 {
     protected $message_service;
-    
+
     public function __construct(
         MessageService $message_service
     )
@@ -48,12 +48,12 @@ class MessageController extends Controller
     {
         try {
             $data = $request->validated();// バリデーションした値を変数へ。
-        $data['user_id'] = Auth::id(); // ログイン中のユーザー id を配列に追加。
-        $this->message_service->createNewMessage($data, $id);
+            $data['user_id'] = Auth::id(); // ログイン中のユーザー id を配列に追加。
+            $this->message_service->createNewMessage($data, $id);
         } catch (Exception $error) {
-            return redirect()->route('threads.index')->with('error', 'メッセージの投稿ができませんでした。');
+            return redirect()->route('threads.show', $id)->with('error', 'メッセージの投稿ができませんでした。');
         }
-        return redirect()->route('threads.index')->with('success', 'メッセージを投稿しました');
+        return redirect()->route('threads.show', $id)->with('success', 'メッセージを投稿しました');
     }
 
     /**
