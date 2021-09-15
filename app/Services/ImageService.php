@@ -15,6 +15,7 @@ class ImageService
      * @var ImageRepository
      */
     protected $image_repository;
+
     /**
      * ImageService constructor.
      *
@@ -52,9 +53,16 @@ class ImageService
             throw new Exception($error->getMessage());
         }
         DB::commit();
+
         return $image;
     }
 
+    /**
+     * Create temporary url from path
+     *
+     * @param String $s3_file_path
+     * @return String
+     */
     public function createTemporaryUrl(String $s3_file_path)
     {
         return Storage::disk('s3')->temporaryUrl($s3_file_path, Carbon::now()->addDay());

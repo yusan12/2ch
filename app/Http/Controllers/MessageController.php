@@ -4,13 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Image;
 use Illuminate\Http\Request;
-use App\Http\Requests\MessageRequest;
-use App\Services\MessageService;
 use App\Services\ImageService;
+use App\Services\MessageService;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\MessageRequest;
 
 class MessageController extends Controller
 {
+    /**
+     * The MessageService implementation.
+     *
+     * @var MessageService
+     */
     protected $message_service;
 
     /**
@@ -20,15 +25,20 @@ class MessageController extends Controller
      */
     protected $image_service;
 
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct(
         MessageService $message_service,
         ImageService $image_service
-    )
-    {
+    ) {
         $this->middleware('auth');
         $this->message_service = $message_service;
         $this->image_service = $image_service;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -38,7 +48,6 @@ class MessageController extends Controller
     {
         //
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -48,22 +57,22 @@ class MessageController extends Controller
     {
         //
     }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function store(MessageRequest $request, int $id)
     {
         try {
-            $data = $request->validated();// バリデーションした値を変数へ。
-            $data['user_id'] = Auth::id(); // ログイン中のユーザー id を配列に追加。
+            $data = $request->validated();
+            $data['user_id'] = Auth::id();
             $message = $this->message_service->createNewMessage($data, $id);
 
-            $images = $request->file('images'); // 投稿された画像を $images に代入
-            if ($images) {// $images が存在するか（画像投稿されたかどうか）
+            $images = $request->file('images');
+            if ($images) {
                 $this->image_service->createNewImages($images, $message->id);
             }
         } catch (Exception $error) {
@@ -71,7 +80,6 @@ class MessageController extends Controller
         }
         return redirect()->route('threads.show', $id)->with('success', 'メッセージを投稿しました');
     }
-
     /**
      * Display the specified resource.
      *
@@ -82,7 +90,6 @@ class MessageController extends Controller
     {
         //
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -93,7 +100,6 @@ class MessageController extends Controller
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -105,7 +111,6 @@ class MessageController extends Controller
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      *
