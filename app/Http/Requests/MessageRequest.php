@@ -25,13 +25,16 @@ class MessageRequest extends FormRequest
     {
         return [
             'body' => 'required',
+            'images.*' => 'image|mimes:jpg,png,jpeg,gif,svg',
         ];
     }
-    
+
     public function messages()
     {
         return [
             'body.required'  => trans('validation.required'),
+            'images.image'  => trans('validation.image'),
+            'images.mimes'  => trans('validation.mimes'),
         ];
     }
 }
