@@ -1,12 +1,16 @@
 <?php
+
 namespace App\Repositories;
+
 use App\Image;
+
 class ImageRepository
 {
     /**
      * @var Image
      */
     protected $image;
+
     /**
      * ImageRepository constructor.
      *
@@ -16,6 +20,7 @@ class ImageRepository
     {
         $this->image = $image;
     }
+
     /**
      * Create new Image.
      *
