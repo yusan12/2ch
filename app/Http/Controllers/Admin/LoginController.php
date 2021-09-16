@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -37,12 +39,14 @@ class LoginController extends Controller
     {
         $this->middleware('guest:admin')->except('logout');
     }
+
     public function showLoginForm()
     {
         return view('admin.login');
     }
+
     protected function guard()
     {
-        return Admin::guard('admin');
+        return Auth::guard('admin');
     }
 }
