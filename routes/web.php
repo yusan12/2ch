@@ -31,3 +31,10 @@ Route::group(['prefix' => 'admin'], function () {
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('home', 'Admin\HomeController@index')->name('admin.home');
 });
+
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'as' => 'admin.'], function () {
+    Route::post('logout', 'Admin\LoginController@logout')->name('logout');
+    Route::get('home', 'Admin\HomeController@index')->name('home');
+    Route::resource('/threads', 'Admin\ThreadController')->except(['create', 'store', 'update']);
+    Route::resource('/threads/{thread}/messages', 'Admin\MessageController')->only(['destroy']);
+});
