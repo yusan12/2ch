@@ -1,11 +1,12 @@
 <?php
-namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use App\Http\Requests\ThreadRequest;
-use App\Repositories\ThreadRepository;
-use App\Services\ThreadService;
-use Illuminate\Support\Facades\Auth;
+
+namespace App\Http\Controllers\Admin;
+
 use Exception;
+use App\Services\ThreadService;
+use App\Http\Controllers\Controller;
+use App\Repositories\ThreadRepository;
+
 class ThreadController extends Controller
 {
     /**
@@ -14,12 +15,14 @@ class ThreadController extends Controller
      * @var ThreadService
      */
     protected $thread_service;
+
     /**
      * The ThreadRepository implementation.
      *
      * @var ThreadRepository
      */
     protected $thread_repository;
+
     /**
      * Create a new controller instance.
      *
@@ -30,7 +33,6 @@ class ThreadController extends Controller
         ThreadService $thread_service,
         ThreadRepository $thread_repository
     ) {
-        $this->middleware('auth:admin');
         $this->thread_service = $thread_service;
         $this->thread_repository = $thread_repository;
     }
@@ -47,25 +49,6 @@ class ThreadController extends Controller
         return view('threads.index', compact('threads'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  App\Http\Requests\ThreadRequest $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(ThreadRequest $request)
-    {
-        try {
-            $data = $request->only(
-                ['name', 'content']
-            );
-            $this->thread_service->createNewThread($data, Auth::id());
-        } catch (Exception $error) {
-            return redirect()->route('threads.index')->with('error', 'スレッドの新規作成に失敗しました。');
-        }
-        // redirect to index method
-        return redirect()->route('threads.index')->with('success', 'スレッドの新規作成が完了しました。');
-    }
     /**
      * Display the specified resource.
      *
@@ -89,6 +72,7 @@ class ThreadController extends Controller
     {
         //
     }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -102,6 +86,6 @@ class ThreadController extends Controller
         } catch (Exception $error) {
             return redirect()->route('admin.threads.index')->with('error', 'スレッドの削除に失敗しました。');
         }
-        return redirect()->route('admin.threads.index')->with('success', 'スレッドの削除に失敗しました。');
+        return redirect()->route('admin.threads.index')->with('success', 'スレッドの削除に成功しました。');
     }
 }
