@@ -1,11 +1,13 @@
 <?php
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use App\Http\Requests\ThreadRequest;
-use App\Repositories\ThreadRepository;
-use App\Services\ThreadService;
-use Illuminate\Support\Facades\Auth;
+
 use Exception;
+use Illuminate\Http\Request;
+use App\Services\ThreadService;
+use App\Http\Requests\ThreadRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Repositories\ThreadRepository;
+use App\Services\SlackNotificationService;
 class ThreadController extends Controller
 {
     /**
@@ -69,7 +71,7 @@ class ThreadController extends Controller
                 ['name', 'content']
             );
             $this->thread_service->createNewThread($data, Auth::id());
-            $this->slack_notification_service->send('new thread');
+            $this->slack_notification_service->send(Auth::user()->name . ' が ' . $request->name . 'を立てました！');
         } catch (Exception $error) {
             return redirect()->route('threads.index')->with('error', 'スレッドの新規作成に失敗しました。');
         }
