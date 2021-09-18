@@ -123,6 +123,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'slack_url' => env('SLACK_URL'), 
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

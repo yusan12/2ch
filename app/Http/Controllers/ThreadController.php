@@ -20,6 +20,13 @@ class ThreadController extends Controller
      * @var ThreadRepository
      */
     protected $thread_repository;
+
+    /**
+     * The ThreadService implementation.
+     *
+     * @var SlackNotificationService
+     */
+    protected $slack_notification_service;
     /**
      * Create a new controller instance.
      *
@@ -28,11 +35,13 @@ class ThreadController extends Controller
      */
     public function __construct(
         ThreadService $thread_service,
-        ThreadRepository $thread_repository
+        ThreadRepository $thread_repository,
+        SlackNotificationService $slack_notification_service
     ) {
         $this->middleware('auth')->except('index');
         $this->thread_service = $thread_service;
         $this->thread_repository = $thread_repository;
+        $this->slack_notification_service = $slack_notification_service;
     }
 
     /**
@@ -60,6 +69,7 @@ class ThreadController extends Controller
                 ['name', 'content']
             );
             $this->thread_service->createNewThread($data, Auth::id());
+            $this->slack_notification_service->send('new thread');
         } catch (Exception $error) {
             return redirect()->route('threads.index')->with('error', 'スレッドの新規作成に失敗しました。');
         }
